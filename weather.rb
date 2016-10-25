@@ -29,6 +29,8 @@ def main
 
   location = Location.new(zipcode)
 
+  location.load
+
   location.current_conditions
 
   location.forecast

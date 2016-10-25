@@ -2,33 +2,37 @@ require 'httparty'
 #
 class Location
   def initialize(zipcode)
-    if cached?(zipcode)
-      load_from_cache(zipcode)
+    @zipcode = zipcode
+  end
+
+  def load
+    if cached?
+      load_from_cache
     else
-      request_from_api(zipcode)
+      request_from_api
     end
   end
 
-  def cached?(zipcode)
-    File.exist?("#{zipcode}.json")
+  def cached?
+    File.exist?("#{@zipcode}.json")
   end
 
-  def load_from_cache(zipcode)
-    @data = JSON.parse(File.read("#{zipcode}.json"))
+  def load_from_cache
+    @data = JSON.parse(File.read("#{@zipcode}.json"))
   end
 
-  def request_from_api(zipcode)
+  def request_from_api
     api_key = 'ac9b002a66b73a2f'
 
-    url = "http://api.wunderground.com/api/#{api_key}/conditions/forecast10day/astronomy/alerts/currenthurricane/q/#{zipcode}.json"
+    url = "http://api.wunderground.com/api/#{api_key}/conditions/forecast10day/astronomy/alerts/currenthurricane/q/#{@zipcode}.json"
 
     @data = HTTParty.get(url).parsed_response
 
-    cache(zipcode, @data)
+    cache
   end
 
-  def cache(zipcode, data)
-    File.write("#{zipcode}.json", JSON.dump(data))
+  def cache
+    File.write("#{@zipcode}.json", JSON.dump(@data))
   end
 
   def current_conditions
@@ -65,19 +69,18 @@ class Location
   end
 
   def astronomy
-    sunrise = @data['moon_phase']['sunrise']
-    sunset = @data['moon_phase']['sunset']
+    moon_phase = @data['moon_phase']
+    sunrise = moon_phase['sunrise']
+    sunset = moon_phase['sunset']
 
     puts "Sunrise: #{sunrise['hour'].to_i}:#{sunrise['minute'].to_i}AM"
     puts "Sunset: #{sunset['hour'].to_i}:#{sunset['minute'].to_i}PM"
   end
 
   def alerts
-    if @data['alerts'].key?('description')
-      puts "Alerts: #{@data['alerts'][0]['description']}"
-    else
-      puts "Alerts: #{@data['alerts']}"
-    end
+    alerts = @data['alerts']
+
+    puts "Alerts: #{alerts[0]['description']}" unless alerts.empty?
   end
 
   def current_hurricane

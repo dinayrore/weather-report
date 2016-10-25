@@ -5,24 +5,37 @@ require 'json'
 require 'pry'
 
 describe Location do
-  describe '#initialize' do
-    context 'cached?' do
+  describe '#cached?' do
+    context 'when zipcode has cached data' do
       it 'returns true' do
-        expect(File.exist?('27713.json')).to eq true
+        File.write('27713.json', '{}')
+
+        location = Location.new('27713')
+
+        expect(location.cached?).to eq true
       end
     end
 
-    context '#load_from_cache' do
-      it 'loads data from file system' do
-        expect(File.read('27713.json')).not_to be_empty
+    context 'when zipcode data is not cached' do
+      it 'returns false' do
+        File.delete('12345.json') if File.exists?('12345.json')
+
+        location = Location.new('12345')
+
+        expect(location.cached?).to eq false
       end
     end
 
-    context '#request_from_api' do
-      it 'gets data through an HTTP api request' do
-        expect(HTTParty.get('http://api.wunderground.com/api/ac9b002a66b73a2f/conditions/forecast10day/astronomy/alerts/currenthurricane/q/27713.json').parsed_response).not_to be_empty
-      end
-    end
+    # context '#load_from_cache' do
+    #   it 'loads data from file system' do
+    #     expect(File.read('27713.json')).not_to be_empty
+    #   end
+    # end
+    #
+    # context '#request_from_api' do
+    #   it 'gets data through an HTTP api request' do
+    #     expect(HTTParty.get('http://api.wunderground.com/api/ac9b002a66b73a2f/conditions/forecast10day/astronomy/alerts/currenthurricane/q/27713.json').parsed_response).not_to be_empty
+    #   end
   end
 end
 
