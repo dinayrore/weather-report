@@ -1,5 +1,4 @@
 require 'httparty'
-require 'json'
 require 'pry'
 #
 class Location
@@ -16,14 +15,13 @@ class Location
   end
 
   def load_from_cache(zipcode)
-    @data = JSON.parse(File.read(zipcode))
+    @data = File.read(zipcode)
   end
 
   def request_from_api(zipcode)
     api_key = 'ac9b002a66b73a2f'
 
-    # /forecast10day/astronomy/alerts/currenthurricane
-    url = "http://api.wunderground.com/api/#{api_key}/conditions/q/#{zipcode}.json"
+    url = "http://api.wunderground.com/api/#{api_key}/conditions/forecast10day/astronomy/alerts/currenthurricane/q/#{zipcode}.json"
 
     @data = HTTParty.get(url).parsed_response
 
@@ -31,32 +29,43 @@ class Location
   end
 
   def cache(zipcode, data)
-    binding.pry
-    file = File.new("#{zipcode}", 'w')
-    file.puts(data)
+    file = File.new("#{zipcode}.json", 'w')
+    file.write(data)
     file.close
   end
 
   def current_conditions
-    # if @data.key? 'current_conditions'
-    #   @data['current_conditions']
-    # end
+    data = @data['current_observation']
+
+    puts "Weather: #{data['weather']}"
+    puts "Temperature (Fahrenheit): #{data['temp_f']}"
+    puts "Humidity: #{data['relative_humidity']}"
+    puts "Wind Speed (mph): #{data['wind_mph']}"
+    puts "Pressure (mb): #{data['pressure_mb']}"
+    puts "Dewpoint (Fahrenheit): #{data['dewpoint_f']}"
+    puts "Heat Index (Fahrenheit): #{data['heat_index_f']}"
+    puts "Windchill (Fahrenheit): #{data['windchill_f']}"
+    puts "Feels Like (Fahrenheit): #{data['feelslike_f']}"
+    puts "Visibility (mi): #{data['visibility_mi']}"
+    puts "UV: #{data['UV']}"
+    puts "Precipitation (in): #{data['precip_today_in']}"
   end
 
-  #
-  # def forecast
-  #
-  # end
-  #
-  # def astronomy
-  #
-  # end
-  #
-  # def alerts
-  #
-  # end
-  #
-  # def current_hurricane
-  #
-  # end
+
+  def forecast
+
+  end
+
+  def astronomy
+
+  end
+
+  def alerts
+    puts @data['alerts']
+  end
+
+  def current_hurricane
+    hurricane = @data['currenthurricane'][0]['stormInfo']['stormName_Nice']
+    puts "Current Hurricane: #{hurricane}"
+  end
 end

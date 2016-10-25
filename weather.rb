@@ -29,7 +29,15 @@ def main
 
   location = Location.new(zipcode)
 
-  p location.current_conditions
+  # location.current_conditions
+
+  # location.forecast
+
+  # location.astronomy
+
+  location.alerts
+
+  # location.current_hurricane
 end
 
 main if __FILE__ == $PROGRAM_NAME
