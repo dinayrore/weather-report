@@ -57,7 +57,11 @@ class Location
   end
 
   def astronomy
+    sunset = @data['moon_phase']['sunset']
+    sunrise = @data['moon_phase']['sunrise']
 
+    puts "Sunset: #{sunset['hour'].to_i}:#{sunset['minute'].to_i}AM"
+    puts "Sunrise: #{sunrise['hour'].to_i}:#{sunrise['minute'].to_i}PM"
   end
 
   def alerts

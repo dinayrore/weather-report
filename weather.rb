@@ -33,9 +33,9 @@ def main
 
   # location.forecast
 
-  # location.astronomy
+  location.astronomy
 
-  location.alerts
+  # location.alerts
 
   # location.current_hurricane
 end
