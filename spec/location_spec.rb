@@ -1,35 +1,33 @@
 require 'spec_helper'
 require_relative '../location'
+require 'httparty'
+require 'json'
+require 'pry'
 
 describe Location do
-
-    # before do
-    #   @location = Location.new('27701')
-    # end
-    #
-    # describe '#initialize' do
-    #   it 'loads information from the file cached' do
-    #     expect(JSON.parse(File.read(@location))).to.not be nil
-    #   end
-    # end
-
-  describe '#has_cached' do
-    context 'when given a valid zip code that exists on the file system' do
+  describe '#initialize' do
+    context 'cached?' do
       it 'returns true' do
-        location = Location.new('27713')
+        expect(File.exist?('27713.json')).to eq true
+      end
+    end
 
-        expect(File.exist?(location)).to eq true
+    context '#load_from_cache' do
+      it 'loads data from file system' do
+        expect(File.read('27713.json')).not_to be_empty
+      end
+    end
+
+    context '#request_from_api' do
+      it 'gets data through an HTTP api request' do
+        expect(HTTParty.get('http://api.wunderground.com/api/ac9b002a66b73a2f/conditions/forecast10day/astronomy/alerts/currenthurricane/q/27713.json').parsed_response).not_to be_empty
       end
     end
   end
+end
 
-
-#   context 'when given a valid zip code that does not exist on the file system' do
-#     it 'requests information from an api' do
-#     end
-#   end
 #
-#   end
+#
 #
 #
 #     context 'when given a valid zip code that does not exist' do
@@ -71,4 +69,3 @@ describe Location do
 #   describe '#ten_day_forecast' do
 #
 #   end
-end

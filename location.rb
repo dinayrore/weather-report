@@ -1,23 +1,21 @@
 require 'httparty'
 require 'json'
-
+require 'pry'
 #
 class Location
   def initialize(zipcode)
-    if has_cached(zipcode)
+    if cached?(zipcode)
       load_from_cache(zipcode)
     else
       request_from_api(zipcode)
     end
   end
 
-  def has_cached(zipcode)
-    # TODO: does a file exist on the file system for this zipcode boolean true or false
+  def cached?(zipcode)
     File.exist?(zipcode)
   end
 
   def load_from_cache(zipcode)
-    # TODO: load data from file system
     @data = JSON.parse(File.read(zipcode))
   end
 
@@ -29,11 +27,14 @@ class Location
 
     @data = HTTParty.get(url).parsed_response
 
-    # cache(zipcode, @data)
+    cache(zipcode, @data)
   end
 
   def cache(zipcode, data)
-    # TODO: write data to the file system
+    binding.pry
+    file = File.new("#{zipcode}", 'w')
+    file.puts(data)
+    file.close
   end
 
   def current_conditions
