@@ -1,5 +1,4 @@
 require 'httparty'
-require 'pry'
 #
 class Location
   def initialize(zipcode)
@@ -11,11 +10,11 @@ class Location
   end
 
   def cached?(zipcode)
-    File.exist?(zipcode)
+    File.exist?("#{zipcode}.json")
   end
 
   def load_from_cache(zipcode)
-    @data = File.read(zipcode)
+    @data = JSON.parse(File.read("#{zipcode}.json"))
   end
 
   def request_from_api(zipcode)
@@ -29,9 +28,7 @@ class Location
   end
 
   def cache(zipcode, data)
-    file = File.new("#{zipcode}.json", 'w')
-    file.write(data)
-    file.close
+    File.write("#{zipcode}.json", JSON.dump(data))
   end
 
   def current_conditions
@@ -54,6 +51,7 @@ class Location
 
   def forecast
     day = @data['forecast']['txt_forecast']['forecastday']
+
     puts "Ten Day Forecast: \n #{day[0]['title']} - #{day[0]['fcttext']} \n " \
     "#{day[2]['title']} - #{day[2]['fcttext']} \n " \
     "#{day[4]['title']} - #{day[4]['fcttext']} \n " \
@@ -75,7 +73,11 @@ class Location
   end
 
   def alerts
-    puts "Alerts: #{@data['alerts']}"
+    if @data['alerts'].key?('description')
+      puts "Alerts: #{@data['alerts'][0]['description']}"
+    else
+      puts "Alerts: #{@data['alerts']}"
+    end
   end
 
   def current_hurricane
