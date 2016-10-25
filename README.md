@@ -1,6 +1,6 @@
 # Weather Report
 
-The program entitled '.rb' is a basic program intended to help users to ... The program does the following functions...The program will automatically output...
+The program entitled `weather.rb` is a basic program that gathers weather data from the API Weather Underground.  The weather report includes functions for current weather conditions, a ten day forecast, sunrise/sunset, weather alerts, and all active hurricane names.
 
 ## Getting Started
 
@@ -36,8 +36,7 @@ Once you have completed the above installation processes your system should be r
 Please complete the following procedure to run the program on a live system:
   1. Open Terminal.
   2. Change your directory to the one that which you have saved this zip file.`cd folder_name`
-  3. Type `ruby .rb zipcode` (replacing 'zipcode' with your actual zip) to run the program.
-  4. READ all instructions BEFORE adding input.
+  3. To run the program, type `ruby weather.rb -z 123456` (replacing '123456' with your actual zip code).
 
 ## Built With
 
