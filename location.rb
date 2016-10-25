@@ -53,23 +53,33 @@ class Location
 
 
   def forecast
-
+    day = @data['forecast']['txt_forecast']['forecastday']
+    puts "Ten Day Forecast: \n #{day[0]['title']} - #{day[0]['fcttext']} \n " \
+    "#{day[2]['title']} - #{day[2]['fcttext']} \n " \
+    "#{day[4]['title']} - #{day[4]['fcttext']} \n " \
+    "#{day[6]['title']} - #{day[6]['fcttext']} \n " \
+    "#{day[8]['title']} - #{day[8]['fcttext']} \n " \
+    "#{day[10]['title']} - #{day[10]['fcttext']} \n " \
+    "#{day[12]['title']} - #{day[12]['fcttext']} \n " \
+    "#{day[14]['title']} - #{day[14]['fcttext']} \n " \
+    "#{day[16]['title']} - #{day[16]['fcttext']} \n " \
+    "#{day[18]['title']} - #{day[18]['fcttext']} "
   end
 
   def astronomy
-    sunset = @data['moon_phase']['sunset']
     sunrise = @data['moon_phase']['sunrise']
+    sunset = @data['moon_phase']['sunset']
 
-    puts "Sunset: #{sunset['hour'].to_i}:#{sunset['minute'].to_i}AM"
-    puts "Sunrise: #{sunrise['hour'].to_i}:#{sunrise['minute'].to_i}PM"
+    puts "Sunrise: #{sunrise['hour'].to_i}:#{sunrise['minute'].to_i}AM"
+    puts "Sunset: #{sunset['hour'].to_i}:#{sunset['minute'].to_i}PM"
   end
 
   def alerts
-    puts @data['alerts']
+    puts "Alerts: #{@data['alerts']}"
   end
 
   def current_hurricane
     hurricane = @data['currenthurricane'][0]['stormInfo']['stormName_Nice']
-    puts "Current Hurricane: #{hurricane}"
+    puts "Hurricane: #{hurricane}"
   end
 end
